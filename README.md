@@ -52,6 +52,47 @@ But why are there substantially fewer ties? I think this has to do with the fact
 
 I don't know about you, but that is even more surprising than the original question.
 
+## Simulation #3
+
+This version of the game is inspired by [this tweet](https://x.com/49pctber/status/1834700741245858239).
+
+> Flip 100 coins, marked 1-100. Each second, Alice and Bob simultaneously check one coin. Alice goes in order (1, 2, 3, …); Bob checks the odd coins, then the even (so 1, 3, 5, …, 99, 2, 4, 6, …). Who is more likely to see two consecutive heads OR two consecutive tails *first*?
+
+```
+2024/09/13 23:34:22 Alice wins: 374719
+2024/09/13 23:34:22 Bob wins  : 250723
+2024/09/13 23:34:22 Ties      : 374558
+```
+
+### Analysis #3
+
+Now Alice has a 60% probability of winning ignoring ties.
+
+This is the easiest to analyze. The game is completely determined by four coins 1, 2, 3, and 5. There are only sixteen possible permutations of those four coins, so we can simply enumerate them and note the outcome of each game:
+
+- `HHH?H` (tie)
+- `HHH?T` (tie)
+- `HHT?H` (Alice win)
+- `HHT?T` (Alice win)
+- `HTH?H` (Bob win)
+- `HTH?T` (Bob win)
+- `HTT?H` (Alice win)
+- `HTT?T` (tie)
+- `THH?H` (tie)
+- `THH?T` (Alice win)
+- `THT?H` (Bob win)
+- `THT?T` (Bob win)
+- `TTH?H` (Alice win)
+- `TTH?T` (Alice win)
+- `TTT?H` (tie)
+- `TTT?T` (tie)
+
+Since each sequence of coins is equally likely to occur, we can count the ties and wins for each player and divide by 16 to get the probability of that happening.
+
+There are 6 sequences that lead to an Alice win, 6 that lead to a tie, and 4 that lead to a Bob win. Those correspond to probabilities of 0.375, 0.375, and 0.25, respectively, which closely matches the simulated results.
+
+Intuitively, this advantage can be explained by the fact that if neither Alice nor Bob won on their second coin, Alice can only win or tie (but not lose) on her third. This is because coins 1 and 3 are necessarily different because Bob didn't win on his second coin. (Equivalently, coins 2 and 3 must be the same.) The best Bob can do in that situation is tie when coins 3 and 5 are the same.
+
 ## Related Puzzle
 
 Daniel Litt quoted [this tweet](https://x.com/GilKalai/status/1830970396352618561) as being a "closely related...beautiful puzzle". The full blog post can be found [here](https://gilkalai.wordpress.com/2024/09/03/test-your-intuition-56-fifteen-boxes-puzzle/).
